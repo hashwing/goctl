@@ -3,32 +3,36 @@ package main
 import (
 	"bytes"
 	"flag"
-	"html/template"
+	"fmt"
 	"io/ioutil"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"strings"
+	"text/template"
 )
 
 type Values struct {
-	Mod string
-	App string
-	Dir string
+	Mod         string
+	App         string
+	Dir         string
+	EnableMongo bool
 }
 
 func main() {
 	appName := flag.String("app", "server", "app name")
 	mod := flag.String("mod", "server", "mod path")
 	dir := flag.String("dir", ".", "code dir")
+	enableMongo := flag.Bool("mongo", false, "add mongo")
 	flag.Parse()
 	if *mod == "" {
 		mod = appName
 	}
 	v := &Values{
-		Mod: *mod,
-		App: *appName,
-		Dir: *dir,
+		Mod:         *mod,
+		App:         *appName,
+		Dir:         *dir,
+		EnableMongo: *enableMongo,
 	}
 	err := create(v)
 	if err != nil {
@@ -37,10 +41,14 @@ func main() {
 }
 
 func create(vars *Values) error {
+	fmt.Println("start parse code...")
 	for _, f := range fs {
 		path, err := ParseTpl(f.Path, vars)
 		if err != nil {
 			return err
+		}
+		if strings.HasPrefix(path, "pkg/store/mongo") && !vars.EnableMongo {
+			continue
 		}
 		err = os.MkdirAll(vars.Dir+"/"+filepath.Dir(path), 0664)
 		if err != nil {
@@ -55,18 +63,23 @@ func create(vars *Values) error {
 			return err
 		}
 	}
+	fmt.Println("finish parse code")
+	fmt.Println("start init mod...")
 	cmd := exec.Command("go", "mod", "init", vars.Mod)
 	cmd.Dir = vars.Dir + "/"
 	err := cmd.Run()
 	if err != nil {
 		return err
 	}
+	fmt.Println("finish init mod")
+	fmt.Println("start go get packages...")
 	cmd = exec.Command("go", "mod", "tidy")
 	cmd.Dir = vars.Dir + "/"
 	err = cmd.Run()
 	if err != nil {
 		return err
 	}
+	fmt.Println("finish go get packages")
 	return nil
 }
 

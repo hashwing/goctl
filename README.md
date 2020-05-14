@@ -13,7 +13,7 @@ make bin
 
 ```
 
-./goctl -app demo -dir demo -mod github.com/hashwing/demo
+./goctl -app demo -dir demo -mod github.com/hashwing/demo -mongo=true
 
 ```
 
@@ -22,4 +22,6 @@ make bin
 `dir`: 代码文件夹，默认: 当前目录
 
 `mod`: go mod，默认：server
+
+`mongo` 初始化mongo 作为数据存储，默认: false
 

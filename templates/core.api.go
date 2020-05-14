@@ -10,6 +10,7 @@ import (
 type APIManager struct {
 	Config *Config
 	Auth   Auth
+	Store  *Store
 }
 
 type TokenInfo struct {

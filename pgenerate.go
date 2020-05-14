@@ -13,15 +13,9 @@ import (
 func main() {
 	content := []byte("package main\n")
 	infos := []string{}
-	tplFiles, err := ioutil.ReadDir("./templates")
-	if err != nil {
-		panic(err)
-	}
+	tplFiles := getFiles("templates")
 	for _, tplF := range tplFiles {
-		if tplF.IsDir() {
-			continue
-		}
-		data, err := ioutil.ReadFile("./templates/" + tplF.Name())
+		data, err := ioutil.ReadFile(tplF.Path)
 		if err != nil {
 			panic(err)
 		}
@@ -30,9 +24,8 @@ func main() {
 			panic(err)
 		}
 		path := strings.ReplaceAll(strings.ReplaceAll(strings.ReplaceAll(line, "\n", ""), "\r", ""), "//", "")
-
 		dataStr := strings.Replace(string(data), line, "", 1)
-		key := strings.Replace(tplF.Name(), ".", "_", -1)
+		key := tplF.Name
 		info := fmt.Sprintf(`
 			var %s_file = fileInfo{
 				Path: "%s",
@@ -56,7 +49,7 @@ func main() {
 	}
 	fs += "}\n"
 	contentStr := string(content) + fs
-	err = ioutil.WriteFile("tpl.go", []byte(contentStr), 0664)
+	err := ioutil.WriteFile("tpl.go", []byte(contentStr), 0664)
 	if err != nil {
 		panic(err)
 	}
@@ -64,6 +57,33 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+}
+
+type tplInfo struct {
+	Path string
+	Name string
+}
+
+func getFiles(dir string) []tplInfo {
+	res := make([]tplInfo, 0)
+	tplFiles, err := ioutil.ReadDir(dir)
+	if err != nil {
+		panic(err)
+	}
+	for _, tplF := range tplFiles {
+		if tplF.IsDir() {
+			subFiles := getFiles(dir + "/" + tplF.Name())
+			if err != nil {
+				panic(err)
+			}
+			res = append(res, subFiles...)
+			continue
+		}
+		path := dir + "/" + tplF.Name()
+		name := strings.Replace(strings.Replace(path, ".", "_", -1), "/", "_", -1)
+		res = append(res, tplInfo{Path: path, Name: name})
+	}
+	return res
 }
 
 // hexdump is a template function that creates a hux dump
