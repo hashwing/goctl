@@ -17,3 +17,7 @@ bin:
 
 docker:
 	docker build -t {{ .App }}:$(APP_VERSION) -f hack/Dockerfile .
+
+release:
+	go mod vendor
+	go build $(LDFLAGS) -o $(BINARY) cmd/{{ .App }}/main.go
