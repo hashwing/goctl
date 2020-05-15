@@ -5,11 +5,13 @@ import (
 	"flag"
 	"fmt"
 	"io/ioutil"
+	"math/rand"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"strings"
 	"text/template"
+	"time"
 )
 
 type Values struct {
@@ -101,8 +103,9 @@ func newTpl() *template.Template {
 
 // funcMap provides extra functions for the templates.
 var funcMap = template.FuncMap{
-	"substr":  substr,
-	"replace": replace,
+	"substr":    substr,
+	"replace":   replace,
+	"randomStr": randomStr,
 }
 
 func substr(s string, i int) string {
@@ -111,4 +114,15 @@ func substr(s string, i int) string {
 
 func replace(s, old, new string) string {
 	return strings.ReplaceAll(s, old, new)
+}
+
+func randomStr(length int) string {
+	str := "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+	bytes := []byte(str)
+	result := []byte{}
+	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+	for i := 0; i < length; i++ {
+		result = append(result, bytes[r.Intn(len(bytes))])
+	}
+	return string(result)
 }

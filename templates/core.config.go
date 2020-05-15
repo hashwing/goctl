@@ -14,8 +14,8 @@ type ServerConfig struct {
 }
 
 type TokenCfg struct {
-	Secret     string `envconfig:"SERVER_TOKEN_SECRET"`
-	Expiration int64  `envconfig:"SERVER_EXPIRATION"`
+	Secret     string `envconfig:"SERVER_TOKEN_SECRET" default:"{{ randomStr 32 }}"`
+	Expiration int64  `envconfig:"SERVER_TOKEN_EXPIRATION" default:"3600"`
 }
 
 {{- if .EnableMongo }}
