@@ -21,11 +21,11 @@ type TokenCfg struct {
 {{- if .EnableMongo }}
 // MongoConfig MongoDB数据库连接参数
 type MongoConfig struct {
-	Address  string `envconfig:"ALGALON_SERVER_MONGO_ADDRESS" default:"localhost"`
-	Port     uint   `envconfig:"ALGALON_SERVER_MONGO_PORT" default:"27017"`
-	Username string `envconfig:"ALGALON_SERVER_MONGO_USERNAME" default:"root"`
-	Password string `envconfig:"ALGALON_SERVER_MONGO_PASSWD" default:"sunrunvas"`
-	Database string `envconfig:"ALGALON_SERVER_MONGO_DATABASE" default:"{{ .App }}"`
+	Address  string `envconfig:"SERVER_MONGO_ADDRESS" default:"localhost"`
+	Port     uint   `envconfig:"SERVER_MONGO_PORT" default:"27017"`
+	Username string `envconfig:"SERVER_MONGO_USERNAME" default:"root"`
+	Password string `envconfig:"SERVER_MONGO_PASSWD" default:"sunrunvas"`
+	Database string `envconfig:"SERVER_MONGO_DATABASE" default:"{{ .App }}"`
 }
 
 {{- end }}
