@@ -2,10 +2,10 @@
 
 golang 后台脚手架，beego + jwt
 
-## 编译
+## 安装
 
 ```
-make bin
+go install  git.gzsunrun.cn/sunruniaas/goctl
 
 ```
 
@@ -24,4 +24,17 @@ make bin
 `mod`: go mod，默认：server
 
 `mongo` 初始化mongo 作为数据存储，默认: false
+
+
+## 开发编译
+
+生成文件放在template文件夹，文件开头注释文件生成路径`//pkg/test/test.go`
+
+```
+
+make gen
+
+make bin
+
+```
 

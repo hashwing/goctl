@@ -12,7 +12,7 @@ LDFLAGS=-ldflags "-w -s -X '$(VERSION_PKG).AppVersion=${APP_VERSION}' -X '$(VERS
 all: bin
 
 gen:
-	go run pgenerate.go
+	go run gen/generate.go
 
 bin:
 	go build -o $(BINARY) main.go tpl.go
