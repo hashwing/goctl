@@ -52,7 +52,7 @@ func create(vars *Values) error {
 		if strings.HasPrefix(path, "pkg/store/mongo") && !vars.EnableMongo {
 			continue
 		}
-		err = os.MkdirAll(vars.Dir+"/"+filepath.Dir(path), 0664)
+		err = os.MkdirAll(vars.Dir+"/"+filepath.Dir(path), 0755)
 		if err != nil {
 			return err
 		}
