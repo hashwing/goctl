@@ -9,7 +9,7 @@ APP_VERSION=$(shell git rev-parse --abbrev-ref HEAD | grep -v HEAD || git descri
 
 LDFLAGS=-ldflags "-w -s -X '$(VERSION_PKG).AppVersion=${APP_VERSION}' -X '$(VERSION_PKG).BuildTime=${BUILD_TIME}' -X '$(VERSION_PKG).GoVersion=${GO_VERSION}' -X '$(VERSION_PKG).GitCommit=${GIT_COMMIT}'"
 
-.PHONY: bin
+.PHONY: bin docker release run
 all: bin
 
 bin:
@@ -21,3 +21,6 @@ docker:
 release:
 	go mod vendor
 	go build $(LDFLAGS) -o $(BINARY) cmd/{{ .App }}/main.go
+
+run:
+	go run $(LDFLAGS) cmd/{{ .App }}/main.go

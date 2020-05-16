@@ -1,4 +1,4 @@
-//cmd/{{.App}}/commond/cmd.go
+//cmd/{{.App}}/command/cmd.go
 package command
 
 import (

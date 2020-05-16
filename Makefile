@@ -8,11 +8,10 @@ APP_VERSION=$(shell git rev-parse --abbrev-ref HEAD | grep -v HEAD || git descri
 
 LDFLAGS=-ldflags "-w -s -X '$(VERSION_PKG).AppVersion=${APP_VERSION}' -X '$(VERSION_PKG).BuildTime=${BUILD_TIME}' -X '$(VERSION_PKG).GoVersion=${GO_VERSION}' -X '$(VERSION_PKG).GitCommit=${GIT_COMMIT}'"
 
-.PHONY: bin
+.PHONY: bin gen
 all: bin
 
 gen:
 	go run gen/generate.go
-
 bin:
 	go build -o $(BINARY) main.go tpl.go

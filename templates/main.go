@@ -2,7 +2,7 @@
 package main
 
 import (
-	"{{ .Mod }}/cmd/{{ .App }}/commond"
+	"{{ .Mod }}/cmd/{{ .App }}/command"
 )
 
 func main(){

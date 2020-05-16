@@ -24,11 +24,14 @@ type Values struct {
 func main() {
 	appName := flag.String("app", "server", "app name")
 	mod := flag.String("mod", "server", "mod path")
-	dir := flag.String("dir", ".", "code dir")
+	dir := flag.String("dir", "", "code dir")
 	enableMongo := flag.Bool("mongo", false, "add mongo")
 	flag.Parse()
 	if *mod == "" {
 		mod = appName
+	}
+	if *dir == "" {
+		dir = appName
 	}
 	v := &Values{
 		Mod:         *mod,

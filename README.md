@@ -19,7 +19,7 @@ go install  git.gzsunrun.cn/sunruniaas/goctl
 
 `app`: 应用名称，默认:server
 
-`dir`: 代码文件夹，默认: 当前目录
+`dir`: 代码文件夹，默认: 与app相同
 
 `mod`: go mod，默认：server
 
