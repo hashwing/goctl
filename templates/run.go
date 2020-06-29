@@ -27,15 +27,15 @@ func run() {
 		logrus.Error(err)
 		os.Exit(-1)
 	}
-	stroe:=&core.Store{db}
+	store:=&core.Store{db}
 	{{else}}
-	stroe:=&core.Store{}
+	store:=&core.Store{}
 	{{- end }}
 	
 	apiMgr := &core.APIManager{
 		Config: cfg,
 		Auth:   auth.New(cfg),
-		Store: stroe,
+		Store: store,
 	}
 	server.Start(apiMgr)
 }
