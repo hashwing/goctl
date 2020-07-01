@@ -1,6 +1,6 @@
 # goctl 
 
-golang 后台脚手架，beego + jwt + mongodb
+golang 后台脚手架，beego + jwt + [mongodb + mysql]
 
 ## 安装
 
@@ -24,6 +24,8 @@ go install  git.gzsunrun.cn/sunruniaas/goctl
 `mod`: go mod，默认：server
 
 `mongo` 初始化mongo 作为数据存储，默认: false
+
+`mysql` 初始化mysql 作为数据存储，默认: false
 
 ### 生成目录结构
 

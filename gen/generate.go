@@ -28,10 +28,11 @@ func main() {
 		key := tplF.Name
 		info := fmt.Sprintf(`
 			var %s_file = fileInfo{
+				Key:  "%s",
 				Path: "%s",
 				Data: %s,
 			}
-			`, key, path, key)
+			`, key, strings.TrimPrefix(tplF.Path, "templates/"), path, key)
 		infos = append(infos, key+"_file")
 		fmt.Println(key)
 		v := info + "var " + key + " = []byte{" + hexdump([]byte(dataStr)) + "\n}\n"
@@ -39,6 +40,7 @@ func main() {
 	}
 	fs := `
 	type fileInfo struct {
+		Key  string
 		Path string
 		Data []byte
 	}

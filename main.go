@@ -19,6 +19,7 @@ type Values struct {
 	App         string
 	Dir         string
 	EnableMongo bool
+	EnableMysql bool
 }
 
 func main() {
@@ -26,6 +27,7 @@ func main() {
 	mod := flag.String("mod", "server", "mod path")
 	dir := flag.String("dir", "", "code dir")
 	enableMongo := flag.Bool("mongo", false, "add mongo")
+	enableMysql := flag.Bool("mysql", false, "add mysql")
 	flag.Parse()
 	if *mod == "" {
 		mod = appName
@@ -38,6 +40,7 @@ func main() {
 		App:         *appName,
 		Dir:         *dir,
 		EnableMongo: *enableMongo,
+		EnableMysql: *enableMysql,
 	}
 	err := create(v)
 	if err != nil {
@@ -52,7 +55,10 @@ func create(vars *Values) error {
 		if err != nil {
 			return err
 		}
-		if strings.HasPrefix(path, "pkg/store/mongo") && !vars.EnableMongo {
+		if strings.HasPrefix(f.Key, "mongo") && !vars.EnableMongo {
+			continue
+		}
+		if strings.HasPrefix(f.Key, "gorm/mysql") && !vars.EnableMysql {
 			continue
 		}
 		err = os.MkdirAll(vars.Dir+"/"+filepath.Dir(path), 0755)
@@ -85,6 +91,16 @@ func create(vars *Values) error {
 		return err
 	}
 	fmt.Println("finish go get packages")
+
+	if vars.EnableMysql {
+		fmt.Println("install generate tools")
+		cmd = exec.Command("go", "install", "github.com/hashwing/togo")
+		cmd.Dir = vars.Dir + "/"
+		err = cmd.Run()
+		if err != nil {
+			return err
+		}
+	}
 	return nil
 }
 

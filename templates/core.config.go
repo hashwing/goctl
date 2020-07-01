@@ -11,6 +11,9 @@ type ServerConfig struct {
 	{{- if .EnableMongo }}
 	Mongo MongoConfig
 	{{- end }} 
+	{{- if .EnableMysql }}
+	Mysql MysqlConfig
+	{{- end }} 
 }
 
 type TokenCfg struct {
@@ -26,6 +29,17 @@ type MongoConfig struct {
 	Username string `envconfig:"SERVER_MONGO_USERNAME" default:"root"`
 	Password string `envconfig:"SERVER_MONGO_PASSWD" default:"sunrunvas"`
 	Database string `envconfig:"SERVER_MONGO_DATABASE" default:"{{ .App }}"`
+}
+
+{{- end }}
+
+{{- if .EnableMysql }}
+//MysqlConfig mysql数据库配置
+type MysqlConfig struct {
+	Address  string `envconfig:"SERVER_MYSQL_ADDRESS"`
+	Username string `envconfig:"SERVER_MYSQL_USERNAME"`
+	Password string `envconfig:"SERVER_MYSQL_PASSWORD"`
+	Database string `envconfig:"SERVER_MYSQL_DATABASE"`
 }
 
 {{- end }}
