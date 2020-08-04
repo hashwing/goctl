@@ -124,6 +124,10 @@ type Auth interface {
 
 ```
 
+## 开发规范
+
+[Go 语言编码规范](docs/go-style-guide.md)
+
 
 
 ## 开发编译
