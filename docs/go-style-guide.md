@@ -22,7 +22,6 @@
   - [错误包装 (Error Wrapping)](#错误包装-error-wrapping)
   - [处理类型断言失败](#处理类型断言失败)
   - [不要 panic](#不要-panic)
-  - [使用 go.uber.org/atomic](#使用-gouberorgatomic)
   - [避免可变全局变量](#避免可变全局变量)
   - [避免在公共结构中嵌入类型](#避免在公共结构中嵌入类型)
   - [避免使用内置名称](#避免使用内置名称)
@@ -1076,60 +1075,6 @@ if err != nil {
 
 <!-- TODO: Explain how to use _test packages. -->
 
-### 使用 go.uber.org/atomic
-
-使用 [sync/atomic] 包的原子操作对原始类型 (`int32`, `int64`等）进行操作，因为很容易忘记使用原子操作来读取或修改变量。
-
-[go.uber.org/atomic] 通过隐藏基础类型为这些操作增加了类型安全性。此外，它包括一个方便的`atomic.Bool`类型。
-
-[go.uber.org/atomic]: https://godoc.org/go.uber.org/atomic
-[sync/atomic]: https://golang.org/pkg/sync/atomic/
-
-<table>
-<thead><tr><th>Bad</th><th>Good</th></tr></thead>
-<tbody>
-<tr><td>
-
-```go
-type foo struct {
-  running int32  // atomic
-}
-
-func (f* foo) start() {
-  if atomic.SwapInt32(&f.running, 1) == 1 {
-     // already running…
-     return
-  }
-  // start the Foo
-}
-
-func (f *foo) isRunning() bool {
-  return f.running == 1  // race!
-}
-```
-
-</td><td>
-
-```go
-type foo struct {
-  running atomic.Bool
-}
-
-func (f *foo) start() {
-  if f.running.Swap(true) {
-     // already running…
-     return
-  }
-  // start the Foo
-}
-
-func (f *foo) isRunning() bool {
-  return f.running.Load()
-}
-```
-
-</td></tr>
-</tbody></table>
 
 ### 避免可变全局变量
 
@@ -3055,8 +3000,3 @@ func Open(
 
 <!-- TODO: replace this with parameter structs and functional options, when to
 use one vs other -->
-
-
-## Stargazers over time
-
-[![Stargazers over time](https://starchart.cc/xxjwxc/uber_go_guide_cn.svg)](https://starchart.cc/xxjwxc/uber_go_guide_cn)
