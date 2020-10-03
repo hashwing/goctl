@@ -27,6 +27,8 @@ go install  git.gzsunrun.cn/sunruniaas/goctl
 
 `mysql` 初始化mysql 作为数据存储，默认: false
 
+`vue` 生成vue admin 工程，默认false
+
 ### 生成目录结构
 
 

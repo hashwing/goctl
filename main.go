@@ -20,6 +20,7 @@ type Values struct {
 	Dir         string
 	EnableMongo bool
 	EnableMysql bool
+	EnableVue   bool
 }
 
 func main() {
@@ -28,6 +29,7 @@ func main() {
 	dir := flag.String("dir", "", "code dir")
 	enableMongo := flag.Bool("mongo", false, "add mongo")
 	enableMysql := flag.Bool("mysql", false, "add mysql")
+	enableVue := flag.Bool("vue", false, "create vue ui")
 	flag.Parse()
 	if *mod == "" {
 		mod = appName
@@ -41,6 +43,7 @@ func main() {
 		Dir:         *dir,
 		EnableMongo: *enableMongo,
 		EnableMysql: *enableMysql,
+		EnableVue:   *enableVue,
 	}
 	err := create(v)
 	if err != nil {
@@ -54,6 +57,12 @@ func create(vars *Values) error {
 		path, err := ParseTpl(f.Path, vars)
 		if err != nil {
 			return err
+		}
+		if strings.HasPrefix(f.Key, "vuetify2") && !vars.EnableVue {
+			continue
+		}
+		if !strings.HasPrefix(f.Key, "vuetify2") && vars.EnableVue {
+			continue
 		}
 		if strings.HasPrefix(f.Key, "mongo") && !vars.EnableMongo {
 			continue
@@ -75,6 +84,9 @@ func create(vars *Values) error {
 		}
 	}
 	fmt.Println("finish parse code")
+	if vars.EnableVue {
+		return nil
+	}
 	fmt.Println("start init mod...")
 	cmd := exec.Command("go", "mod", "init", vars.Mod)
 	cmd.Dir = vars.Dir + "/"
