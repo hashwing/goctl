@@ -10,9 +10,7 @@ import (
 
 	"{{ .Mod }}/core"
 
-	"github.com/astaxie/beego/context"
 	"github.com/dgrijalva/jwt-go"
-	"github.com/dgrijalva/jwt-go/request"
 )
 
 type TokenClaims struct {
@@ -70,27 +68,3 @@ func (a *jwtAuth) ParseFromRequestToken(req *http.Request) (core.TokenInfo, erro
 	info, err := a.GetTokenInfo(tokenStr)
 	return info, err
 }
-
-func (a *jwtAuth) JwtAuthFilter(ctx *context.Context) {
-	if ctx.Request.FormValue("token") != "" {
-		info, err := a.GetTokenInfo(ctx.Request.FormValue("token"))
-		if err == nil {
-			ctx.Input.SetData("token_info", info)
-			return
-		}
-	}
-	token, err := request.ParseFromRequestWithClaims(ctx.Request,
-		request.AuthorizationHeaderExtractor,
-		&TokenClaims{},
-		func(token *jwt.Token) (interface{}, error) {
-			return []byte(a.cfg.Server.Token.Secret), nil
-		})
-	if err != nil || token.Claims.(*TokenClaims).UserID == "" {
-		ctx.Output.Status = 401
-		ctx.Output.JSON(err, false, false)
-		return
-	}
-
-	ctx.Input.SetData("token_info", token.Claims.(*TokenClaims).TokenInfo)
-}
-

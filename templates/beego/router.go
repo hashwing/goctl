@@ -7,6 +7,7 @@ import (
 	"{{ .Mod }}/core"
 	"{{ .Mod }}/pkg/server/apis/base"
 	"{{ .Mod }}/pkg/server/apis/v1"
+	"{{ .Mod }}/pkg/server/middlewares"
 )
 
 func NewV1(apiMgr *core.APIManager) {
@@ -32,5 +33,5 @@ func NewV1(apiMgr *core.APIManager) {
 	)
 
 	beego.AddNamespace(health, public, api)
-	beego.InsertFilter("/api/*", beego.BeforeRouter, apiMgr.Auth.JwtAuthFilter)
+	beego.InsertFilter("/api/*", beego.BeforeRouter,middlewares.JWTAuth(apiMgr.Auth))
 }

@@ -3,8 +3,6 @@ package core
 
 import (
 	"net/http"
-
-	"github.com/astaxie/beego/context"
 )
 
 type APIManager struct {
@@ -18,7 +16,7 @@ type TokenInfo struct {
 }
 
 type Auth interface {
-	JwtAuthFilter(ctx *context.Context)
 	CreateToken(info TokenInfo) string
 	ParseFromRequestToken(req *http.Request) (TokenInfo, error)
+	GetTokenInfo(tokenStr string) (TokenInfo, error)
 }

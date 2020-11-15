@@ -21,6 +21,7 @@ type Values struct {
 	EnableMongo bool
 	EnableMysql bool
 	EnableVue   bool
+	Router      string
 }
 
 func main() {
@@ -30,6 +31,7 @@ func main() {
 	enableMongo := flag.Bool("mongo", false, "add mongo")
 	enableMysql := flag.Bool("mysql", false, "add mysql")
 	enableVue := flag.Bool("vue", false, "create vue ui")
+	router := flag.String("router", "gin", "http router, gin or beego")
 	flag.Parse()
 	if *mod == "" {
 		mod = appName
@@ -44,6 +46,7 @@ func main() {
 		EnableMongo: *enableMongo,
 		EnableMysql: *enableMysql,
 		EnableVue:   *enableVue,
+		Router:      *router,
 	}
 	err := create(v)
 	if err != nil {
@@ -68,6 +71,12 @@ func create(vars *Values) error {
 			continue
 		}
 		if strings.HasPrefix(f.Key, "gorm/mysql") && !vars.EnableMysql {
+			continue
+		}
+		if strings.HasPrefix(f.Key, "beego") && vars.Router != "beego" {
+			continue
+		}
+		if strings.HasPrefix(f.Key, "gin") && vars.Router != "gin" {
 			continue
 		}
 		err = os.MkdirAll(vars.Dir+"/"+filepath.Dir(path), 0755)

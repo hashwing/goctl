@@ -1,6 +1,6 @@
 # goctl 
 
-golang 后台脚手架，beego + jwt + [mongodb + mysql]
+golang 后台脚手架，gin / beego + jwt + [mongodb + mysql]
 
 ## 安装
 
@@ -29,6 +29,8 @@ go install  git.gzsunrun.cn/sunruniaas/goctl
 
 `vue` 生成vue admin 工程，默认false
 
+`router` 指定http框架，支持 gin 和 beego, 默认gin
+
 ### 生成目录结构
 
 
@@ -50,12 +52,14 @@ go install  git.gzsunrun.cn/sunruniaas/goctl
    |- config/ 配置读取
    |- server/ 服务器接口实现
       |- apis/ 各个版本api 控制器
-         |- base/ 基本controller 定义实现，其他cotroller 都会继承（参考beego 文档）
+         |- base/ 基本controller 定义实现，其他cotroller 都会继承（参考 gin/beego 文档）
          |- v1/
             |- type/ 接口数据结构定义
             |- login.go 登录controller（根据具体业务更改实现）
             |- test.go 测试例子（可以按需移除）
-      |- routers/ 接口路由 （参考beego 文档）
+      |- routers/ 接口路由 （参考 gin/beego 文档）
+      |- middlewares/ 中间件
+         |- jwt.go （参考 gin/beego 文档）
       |- server.go 启动函数
             
 
@@ -96,8 +100,8 @@ SERVER_PORT=8090
 
 ```golang
 type Auth interface {
-    //JwtAuthFilter 实现beego 认证中间件，通过 beego.InsertFilter("/api/*", beego.BeforeRouter, apiMgr.Auth.JwtAuthFilter) 使用 
-    JwtAuthFilter(ctx *context.Context)
+    //GetTokenInfo 获取用户信息通过token 
+    GetTokenInfo(tokenStr string) (TokenInfo, error)
     
     //CreateToken 生成token，用于登录成功后生成token 返回给用户
     CreateToken(info TokenInfo) string
