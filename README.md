@@ -144,7 +144,7 @@ type Auth interface {
 
 make gen
 
-make bin
+go install
 
 ```
 
